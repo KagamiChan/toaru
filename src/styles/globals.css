@@ -86,8 +86,3 @@
   src: url('/NotoSansJP-SemiBold.ttf');
   font-display: swap;
 }
-
-svg.in-background {
-  position: fixed;
-  top: -10000px;
-}

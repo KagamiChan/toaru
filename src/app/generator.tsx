@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { DownloadIcon, OpenInNewWindowIcon } from "@radix-ui/react-icons";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
+import { useRef } from "react";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -21,7 +22,6 @@ import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Slider } from "~/components/ui/slider";
 import { Direction, FormSchema, Format, Preset } from "./form-schema";
 import { Preview, type PreviewHandle } from "./preview";
-import { useRef } from "react";
 
 const colorLabel = {
   [Preset.Kagaku]: "Kagaku",
@@ -72,7 +72,11 @@ export const Generator = () => {
           <CardTitle>Parameters</CardTitle>
         </CardHeader>
         <CardContent>
-          <form className="flex flex-col space-y-4" ref={parent}>
+          <form
+            onSubmit={(ev) => ev.preventDefault()}
+            className="flex flex-col space-y-4"
+            ref={parent}
+          >
             <FormItem>
               <FormLabel>Text</FormLabel>
               <div className="flex space-x-4">
@@ -235,14 +239,25 @@ export const Generator = () => {
                 </FormItem>
               )}
             />
-            <Button onClick={() => preview.current?.renderPNG(false)}>
+            <Button
+              onClick={(ev) => {
+                ev.preventDefault();
+                void preview.current?.renderToFile({
+                  format: form.watch("format"),
+                  inMemory: false,
+                });
+              }}
+            >
               Download <DownloadIcon />
             </Button>
             <Button
               variant="secondary"
               onClick={(ev) => {
                 ev.preventDefault();
-                void preview.current?.renderPNG(true);
+                void preview.current?.renderToFile({
+                  format: form.watch("format"),
+                  inMemory: true,
+                });
               }}
             >
               Open in new tab <OpenInNewWindowIcon />
@@ -250,6 +265,19 @@ export const Generator = () => {
           </form>
         </CardContent>
       </Card>
+      <div className="mt-4">
+
+      <p>
+        Generated images are not optimized. For best results, consider using 3rd
+        party optimization tools, e.g.{" "}
+        {form.watch("format") === Format.PNG ? (
+          <a href="https://tinypng.com/" target="_blank">TinyPNG</a>
+        ) : (
+          <a href="https://jakearchibald.github.io/svgomg/" target="_blank">SVGOMG</a>
+        )}
+        .
+      </p>
+      </div>
     </Form>
   );
 };

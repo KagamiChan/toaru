@@ -9,7 +9,15 @@ export const loadImage = (src: string) =>
   new Promise<HTMLImageElement>((resolve, reject) => {
     const image = new Image();
     image.addEventListener("load", () => resolve(image));
-    image.addEventListener('error', () => reject(new Error('Image load error')))
+    image.addEventListener("error", () =>
+      reject(new Error("Image load error")),
+    );
 
     image.src = src;
   });
+
+export const cleanUpSVG = (svg: SVGSVGElement) => {
+  [...svg.querySelectorAll("[style]")].forEach((element) =>
+    element.removeAttribute("style"),
+  );
+};

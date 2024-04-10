@@ -11,14 +11,18 @@ import {
 } from "react";
 import { useFormContext } from "react-hook-form";
 import { type z } from "zod";
+import Session from "svg-text-to-path/entries/browser-fontkit";
 
-import { Direction, Preset, type FormSchema } from "./form-schema";
+import { Direction, Format, Preset, type FormSchema } from "./form-schema";
 import { horizontalLayout, verticalLayout } from "./glyph-layout";
 import { Skeleton } from "~/components/ui/skeleton";
-import { loadImage } from "~/lib/utils";
+import { cleanUpSVG, loadImage } from "~/lib/utils";
 
 export interface PreviewHandle {
-  renderPNG: (openOnly: boolean) => Promise<void>;
+  renderToFile: (option: {
+    format: Format;
+    inMemory: boolean;
+  }) => Promise<void>;
 }
 
 export const Preview = forwardRef<PreviewHandle>((props, ref) => {
@@ -67,79 +71,76 @@ export const Preview = forwardRef<PreviewHandle>((props, ref) => {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleRenderPNG = useCallback(async (openOnly: boolean) => {
-    const svg = new XMLSerializer().serializeToString(svgRef.current as Node);
-    const blob = new Blob([svg], { type: "image/svg+xml" });
-    const dataUrl = URL.createObjectURL(blob);
-    const image = await loadImage(dataUrl);
-
-    const canvas = document.createElement("canvas");
-    canvas.width = image.width;
-    canvas.height = image.height;
-    const ctx = canvas.getContext("2d");
-    ctx?.drawImage(image, 0, 0, image.width, image.height);
-    canvas.toBlob((blob) => {
-      if (!blob) {
-        console.error("Failed to create canvas blob");
+  const handleRenderToFile = useCallback<PreviewHandle["renderToFile"]>(
+    async ({ format, inMemory }) => {
+      const content = svgRef.current?.outerHTML;
+      if (!content) {
+        console.error("No SVG content found");
         return;
       }
-      const url = URL.createObjectURL(blob);
-      if (openOnly) {
-        window.open(url, "_blank");
+      const session = new Session(content, {
+        fonts: {
+          "Noto Serif Local": { source: "/NotoSerifJP-Bold.otf" },
+          "Noto Sans Local": { source: "/NotoSansJP-SemiBold.ttf" },
+        },
+      });
+      await session.replaceAll();
+      const out: string = session.getSvgString();
+      const result = new DOMParser()
+        .parseFromString(out, "image/svg+xml")
+        .querySelector("svg");
+      cleanUpSVG(result!)
+      const svg = new XMLSerializer().serializeToString(result as Node);
+      const blob = new Blob([svg], { type: "image/svg+xml" });
+      const dataUrl = URL.createObjectURL(blob);
+
+      if (format === Format.SVG) {
+        if (inMemory) {
+          window.open(dataUrl, "_blank");
+        } else {
+          const a = document.createElement("a");
+          a.href = dataUrl;
+          a.download = `toaru-${Date.now()}.svg`;
+          a.click();
+        }
       } else {
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `toaru-${Date.now()}.png`;
-        a.click();
+        const image = await loadImage(dataUrl);
+
+        const canvas = document.createElement("canvas");
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(image, 0, 0, image.width, image.height);
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            console.error("Failed to create canvas blob");
+            return;
+          }
+          const url = URL.createObjectURL(blob);
+          if (inMemory) {
+            window.open(url, "_blank");
+          } else {
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `toaru-${Date.now()}.png`;
+            a.click();
+          }
+          URL.revokeObjectURL(url);
+        });
       }
-      URL.revokeObjectURL(url);
       URL.revokeObjectURL(dataUrl);
-    });
-  }, []);
-
-  // useEffect(() => {
-  //   if (isLoading) {
-  //     return
-  //   }
-
-  //   const draw = debounce(async () => {
-  //     const content = svgRef.current?.outerHTML;
-  //     console.log(content);
-  //     const session = new Session(content, {
-  //       fonts: {
-  //         "Noto Serif Local": { source: "/NotoSerifJP-Bold.otf" },
-  //         "Noto Sans Local": { source: "/NotoSansJP-SemiBold.ttf" },
-  //       },
-  //     });
-  //     const stat = await session.replaceAll();
-  //     const out: string = session.getSvgString();
-  //     const result = new DOMParser()
-  //       .parseFromString(out, "image/svg+xml")
-  //       .querySelector("svg");
-  //     if (result) {
-  //       result.id = "result-svg";
-  //       result.classList.remove("in-background");
-  //       const old = containerRef.current?.querySelector("#result-svg");
-  //       if (old) {
-  //         containerRef.current?.removeChild(old);
-  //       }
-  //       containerRef.current?.appendChild(result);
-  //     }
-  //   }, 200);
-  //   const observer = new MutationObserver(() => void draw())
-  //   observer.observe(svgRef.current as Node, { attributes: true, childList: true, subtree: true })
-  //   svgRef.current?.classList.add("in-background");
-  //   return () => observer.disconnect()
-  // }, [isLoading]);
+    },
+    [],
+  );
 
   useImperativeHandle(
     ref,
     () => {
       return {
-        renderPNG: handleRenderPNG,
+        renderToFile: handleRenderToFile,
       };
     },
-    [handleRenderPNG],
+    [handleRenderToFile],
   );
 
   if (isLoading) {
@@ -163,7 +164,7 @@ export const Preview = forwardRef<PreviewHandle>((props, ref) => {
       >
         <defs>
           <linearGradient
-            id="fill_gradient"
+            id="toaru-fill-gradient"
             x1="100%"
             y1="0"
             x2="0"
@@ -180,10 +181,10 @@ export const Preview = forwardRef<PreviewHandle>((props, ref) => {
             y={isHorizontal ? 150 : 142}
             width={isHorizontal ? 140 : 150}
             height={isHorizontal ? 140 : 150}
-            fill="url(#fill_gradient)"
+            fill="url(#toaru-fill-gradient)"
           />
           <text
-            fill="url(#fill_gradient)"
+            fill="url(#toaru-fill-gradient)"
             style={{ fontFamily: "Noto Serif Local" }}
           >
             <tspan {...layout.text_to}>{to}</tspan>
@@ -202,7 +203,7 @@ export const Preview = forwardRef<PreviewHandle>((props, ref) => {
           <text
             x={0}
             y={0}
-            fill="url(#fill_gradient)"
+            fill="url(#toaru-fill-gradient)"
             style={{
               fontFamily: "Noto Sans Local",
               transform: isHorizontal ? undefined : "rotate(90deg)",
