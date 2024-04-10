@@ -20,7 +20,8 @@ import { Input } from "~/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Slider } from "~/components/ui/slider";
 import { Direction, FormSchema, Format, Preset } from "./form-schema";
-import { Preview } from "./preview";
+import { Preview, type PreviewHandle } from "./preview";
+import { useRef } from "react";
 
 const colorLabel = {
   [Preset.Kagaku]: "Kagaku",
@@ -61,10 +62,11 @@ export const Generator = () => {
   });
 
   const [parent] = useAutoAnimate();
+  const preview = useRef<PreviewHandle>(null);
 
   return (
     <Form {...form}>
-      <Preview />
+      <Preview ref={preview} />
       <Card className="sticky bottom-0">
         <CardHeader>
           <CardTitle>Parameters</CardTitle>
@@ -233,10 +235,16 @@ export const Generator = () => {
                 </FormItem>
               )}
             />
-            <Button>
+            <Button onClick={() => preview.current?.renderPNG(false)}>
               Download <DownloadIcon />
             </Button>
-            <Button variant="secondary">
+            <Button
+              variant="secondary"
+              onClick={(ev) => {
+                ev.preventDefault();
+                void preview.current?.renderPNG(true);
+              }}
+            >
               Open in new tab <OpenInNewWindowIcon />
             </Button>
           </form>

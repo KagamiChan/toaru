@@ -1,14 +1,27 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useFormContext } from "react-hook-form";
 import { type z } from "zod";
 
 import { Direction, Preset, type FormSchema } from "./form-schema";
 import { horizontalLayout, verticalLayout } from "./glyph-layout";
 import { Skeleton } from "~/components/ui/skeleton";
+import { loadImage } from "~/lib/utils";
 
-export const Preview = () => {
+export interface PreviewHandle {
+  renderPNG: (openOnly: boolean) => Promise<void>;
+}
+
+export const Preview = forwardRef<PreviewHandle>((props, ref) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -54,6 +67,36 @@ export const Preview = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const handleRenderPNG = useCallback(async (openOnly: boolean) => {
+    const svg = new XMLSerializer().serializeToString(svgRef.current as Node);
+    const blob = new Blob([svg], { type: "image/svg+xml" });
+    const dataUrl = URL.createObjectURL(blob);
+    const image = await loadImage(dataUrl);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const ctx = canvas.getContext("2d");
+    ctx?.drawImage(image, 0, 0, image.width, image.height);
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        console.error("Failed to create canvas blob");
+        return;
+      }
+      const url = URL.createObjectURL(blob);
+      if (openOnly) {
+        window.open(url, "_blank");
+      } else {
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `toaru-${Date.now()}.png`;
+        a.click();
+      }
+      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(dataUrl);
+    });
+  }, []);
+
   // useEffect(() => {
   //   if (isLoading) {
   //     return
@@ -89,8 +132,22 @@ export const Preview = () => {
   //   return () => observer.disconnect()
   // }, [isLoading]);
 
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        renderPNG: handleRenderPNG,
+      };
+    },
+    [handleRenderPNG],
+  );
+
   if (isLoading) {
-    return <Skeleton className="h-[300px] w-[640px] flex items-center justify-center" >Connecting to Misaka network</Skeleton>;
+    return (
+      <Skeleton className="flex h-[300px] w-[640px] items-center justify-center">
+        Connecting to Misaka network
+      </Skeleton>
+    );
   }
 
   return (
@@ -99,7 +156,6 @@ export const Preview = () => {
         width={scale * (isHorizontal ? 640 : 300)}
         height={scale * (isHorizontal ? 300 : 640)}
         viewBox={isHorizontal ? "0 0 640 300" : "0 0 300 640"}
-        id="toaru_svg"
         ref={svgRef}
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -118,7 +174,7 @@ export const Preview = () => {
             <stop id="stopLG" stopColor={stopColor} offset="100%" />
           </linearGradient>
         </defs>
-        <g id="toaru_g">
+        <g>
           <rect
             x={isHorizontal ? 70 : 15}
             y={isHorizontal ? 150 : 142}
@@ -130,41 +186,22 @@ export const Preview = () => {
             fill="url(#fill_gradient)"
             style={{ fontFamily: "Noto Serif Local" }}
           >
-            <tspan {...layout.text_to} id="text_to">
-              {to}
-            </tspan>
-            <tspan {...layout.text_a} id="text_a">
-              {a}
-            </tspan>
-            <tspan {...layout.text_ru} id="text_ru">
-              {ru}
-            </tspan>
-            <tspan {...layout.text_ka} id="text_ka">
-              {ka}
-            </tspan>
-            <tspan {...layout.text_gaku} id="text_gaku">
-              {gaku}
-            </tspan>
-            <tspan {...layout.text_no} id="text_no">
-              {no}
-            </tspan>
-            <tspan {...layout.text_rg0} id="text_rg0" fill="#fff">
+            <tspan {...layout.text_to}>{to}</tspan>
+            <tspan {...layout.text_a}>{a}</tspan>
+            <tspan {...layout.text_ru}>{ru}</tspan>
+            <tspan {...layout.text_ka}>{ka}</tspan>
+            <tspan {...layout.text_gaku}>{gaku}</tspan>
+            <tspan {...layout.text_no}>{no}</tspan>
+            <tspan {...layout.text_rg0} fill="#fff">
               {rg0}
             </tspan>
-            <tspan {...layout.text_rg1} id="text_rg1">
-              {rg1}
-            </tspan>
-            <tspan {...layout.text_rg2} id="text_rg2">
-              {rg2}
-            </tspan>
-            <tspan {...layout.text_rg3} id="text_rg3">
-              {rg3}
-            </tspan>
+            <tspan {...layout.text_rg1}>{rg1}</tspan>
+            <tspan {...layout.text_rg2}>{rg2}</tspan>
+            <tspan {...layout.text_rg3}>{rg3}</tspan>
           </text>
           <text
             x={0}
             y={0}
-            id="text_nato"
             fill="url(#fill_gradient)"
             style={{
               fontFamily: "Noto Sans Local",
@@ -184,4 +221,6 @@ export const Preview = () => {
       </svg>
     </div>
   );
-};
+});
+
+Preview.displayName = "Preview";
