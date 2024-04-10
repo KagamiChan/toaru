@@ -1,0 +1,19 @@
+{
+  "attributionMessage": "本站基于<2>とあるgenerator</2>，灵感来自<5>本の虫：とあるjavascriptの画像生成</5>和<9>とある櫻花の画像生成</9>。",
+  "copyrightMessage": "由<1>かかみ@アトリエにじか</1>创作，以庆祝《とある》系列20周年。",
+  "Text": "文本",
+  "Parameters": "参数",
+  "Scale": "比例",
+  "Download": "下载",
+  "Open in new tab": "在新标签页中打开",
+  "Kagaku": "科学",
+  "Majutsu": "魔术",
+  "Custom": "自定义",
+  "Custom gradient": "自定义渐变",
+  "Preset": "预设",
+  "Direction": "方向",
+  "Horizontal": "水平",
+  "Vertical": "垂直",
+  "Format": "格式",
+  "optimizationWarning": "生成的图片未经优化。为了获得最佳结果，考虑使用第三方优化工具，例如 <2>{{provider}}</2>。"
+}

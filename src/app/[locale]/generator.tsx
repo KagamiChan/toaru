@@ -22,6 +22,7 @@ import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Slider } from "~/components/ui/slider";
 import { Direction, FormSchema, Format, Preset } from "./form-schema";
 import { Preview, type PreviewHandle } from "./preview";
+import { Trans, useTranslation } from "react-i18next";
 
 const colorLabel = {
   [Preset.Kagaku]: "Kagaku",
@@ -64,12 +65,14 @@ export const Generator = () => {
   const [parent] = useAutoAnimate();
   const preview = useRef<PreviewHandle>(null);
 
+  const { t } = useTranslation();
+
   return (
     <Form {...form}>
       <Preview ref={preview} />
       <Card className="sticky bottom-0">
         <CardHeader>
-          <CardTitle>Parameters</CardTitle>
+          <CardTitle>{t("Parameters")}</CardTitle>
         </CardHeader>
         <CardContent>
           <form
@@ -78,7 +81,7 @@ export const Generator = () => {
             ref={parent}
           >
             <FormItem>
-              <FormLabel>Text</FormLabel>
+              <FormLabel>{t('Text')}</FormLabel>
               <div className="flex space-x-4">
                 {["toaru", "kagaku", "no", "railgun", "nato"].map((name) => (
                   <FormField
@@ -117,7 +120,7 @@ export const Generator = () => {
               name="preset"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Color</FormLabel>
+                  <FormLabel>{t("Preset")}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -132,7 +135,7 @@ export const Generator = () => {
                           <FormControl>
                             <RadioGroupItem value={preset}></RadioGroupItem>
                           </FormControl>
-                          <FormLabel>{colorLabel[preset]}</FormLabel>
+                          <FormLabel>{t(colorLabel[preset])}</FormLabel>
                         </FormItem>
                       ))}
                     </RadioGroup>
@@ -142,7 +145,7 @@ export const Generator = () => {
             />
             {form.watch("preset") === Preset.Custom && (
               <FormItem>
-                <FormLabel>Custom gradient</FormLabel>
+                <FormLabel>{t('Custom gradient')}</FormLabel>
                 <div className="flex space-x-4 space-y-0">
                   {["startColor", "stopColor"].map((name) => (
                     <FormItem key={name} className="w-16">
@@ -165,7 +168,7 @@ export const Generator = () => {
               name="direction"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Direction</FormLabel>
+                  <FormLabel>{t("Direction")}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -180,7 +183,7 @@ export const Generator = () => {
                           <FormControl>
                             <RadioGroupItem value={direction}></RadioGroupItem>
                           </FormControl>
-                          <FormLabel>{directionLabel[direction]}</FormLabel>
+                          <FormLabel>{t(directionLabel[direction])}</FormLabel>
                         </FormItem>
                       ))}
                     </RadioGroup>
@@ -190,7 +193,7 @@ export const Generator = () => {
             />
 
             <FormItem>
-              <FormLabel>Scale</FormLabel>
+              <FormLabel>{t("Scale")}</FormLabel>
 
               <div className="flex space-x-4">
                 <Badge variant="secondary">{form.watch("scale")}</Badge>
@@ -216,7 +219,7 @@ export const Generator = () => {
               name="format"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Format</FormLabel>
+                  <FormLabel>{t("Format")}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -248,7 +251,7 @@ export const Generator = () => {
                 });
               }}
             >
-              Download <DownloadIcon />
+              {t("Download")} <DownloadIcon />
             </Button>
             <Button
               variant="secondary"
@@ -260,23 +263,32 @@ export const Generator = () => {
                 });
               }}
             >
-              Open in new tab <OpenInNewWindowIcon />
+              {t("Open in new tab")} <OpenInNewWindowIcon />
             </Button>
           </form>
         </CardContent>
       </Card>
       <div className="mt-4">
-
-      <p>
-        Generated images are not optimized. For best results, consider using 3rd
-        party optimization tools, e.g.{" "}
-        {form.watch("format") === Format.PNG ? (
-          <a href="https://tinypng.com/" target="_blank">TinyPNG</a>
-        ) : (
-          <a href="https://jakearchibald.github.io/svgomg/" target="_blank">SVGOMG</a>
-        )}
-        .
-      </p>
+        <p>
+          <Trans
+            i18nKey="optimizationWarning"
+          >
+            Generated images are not optimized. For best results, consider using
+            3rd party optimization tools, e.g.{" "}
+            {form.watch("format") === Format.PNG ? (
+              <a href="https://tinypng.com/" target="_blank">
+                {// @ts-expect-error special interpolation
+                { provider: "TinyPNG" }}
+              </a>
+            ) : (
+              <a href="https://jakearchibald.github.io/svgomg/" target="_blank">
+                {// @ts-expect-error special interpolation
+                { provider: "SVGOMG" }}
+              </a>
+            )}
+            .
+          </Trans>
+        </p>
       </div>
     </Form>
   );

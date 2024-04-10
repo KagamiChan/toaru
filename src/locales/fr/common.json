@@ -1,0 +1,19 @@
+{
+  "attributionMessage": "Ce site est basé sur <2>とあるgenerator</2>, et s'inspire de <5>本の虫: とあるjavascriptの画像生成</5> et de <9>とある櫻花の画像生成</9>.",
+  "copyrightMessage": "Créé avec ♥ par <1>かかみ@アトリエにじか</1>, pour célébrer le 20ème anniversaire de la série Toaru.",
+  "Text": "Texte",
+  "Parameters": "Paramètres",
+  "Scale": "Échelle",
+  "Download": "Télécharger",
+  "Open in new tab": "Ouvrir dans un nouvel onglet",
+  "Kagaku": "Kagaku",
+  "Majutsu": "Majutsu",
+  "Custom": "Personnalisé",
+  "Custom gradient": "Dégradé personnalisé",
+  "Preset": "Prédéfini",
+  "Direction": "Direction",
+  "Horizontal": "Horizontal",
+  "Vertical": "Vertical",
+  "Format": "Format",
+  "optimizationWarning": "Les images générées ne sont pas optimisées. Pour de meilleurs résultats, envisagez d'utiliser des outils d'optimisation tiers, par ex. <2>{{provider}}</2>."
+}

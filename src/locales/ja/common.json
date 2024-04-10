@@ -1,0 +1,19 @@
+{
+  "attributionMessage": "このサイトは<2>とあるgenerator</2>に基づいており、<5>本の虫: とあるjavascriptの画像生成</5>と<9>とある櫻花の画像生成</9>に触発されています。",
+  "copyrightMessage": "<1>かかみ@アトリエにじか</1>によって作成され、とあるシリーズの20周年を祝っています。",
+  "Text": "テキスト",
+  "Parameters": "パラメータ",
+  "Scale": "スケール",
+  "Download": "ダウンロード",
+  "Open in new tab": "新しいタブで開く",
+  "Kagaku": "科学",
+  "Majutsu": "魔術",
+  "Custom": "カスタム",
+  "Custom gradient": "カスタムグラデーション",
+  "Preset": "プリセット",
+  "Direction": "方向",
+  "Horizontal": "水平",
+  "Vertical": "垂直",
+  "Format": "フォーマット",
+  "optimizationWarning": "生成された画像は最適化されていません。最良の結果を得るために、第三者の最適化ツールの使用を検討してください。例：<2>{{provider}}</2>。"
+}
