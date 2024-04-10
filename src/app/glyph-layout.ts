@@ -63,7 +63,7 @@ export const horizontalLayout = {
     },
   },
   text_rg3: {
-    x: "400",
+    x: "410",
     y: "280",
     style: {
       fontSize: "160px",
@@ -102,7 +102,7 @@ export const verticalLayout = {
   },
   text_ka: {
     x: "170",
-    y: "320",
+    y: "325",
     style: {
       fontSize: "120px",
     },

@@ -90,7 +90,7 @@ export const Preview = () => {
   // }, [isLoading]);
 
   if (isLoading) {
-    return <Skeleton className="h-[300px] w-[640px]" />;
+    return <Skeleton className="h-[300px] w-[640px] flex items-center justify-center" >Connecting to Misaka network</Skeleton>;
   }
 
   return (
