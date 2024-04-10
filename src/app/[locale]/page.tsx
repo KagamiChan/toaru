@@ -4,6 +4,8 @@ import { Generator } from "./generator";
 import { LanguageSelect } from "~/components/language-select";
 import { I18nProvider } from "~/components/i18n-provider";
 
+export const runtime = 'edge'
+
 export default async function HomePage({
   params: { locale },
 }: {
