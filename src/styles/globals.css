@@ -74,3 +74,20 @@
       @apply bg-background text-foreground;
     }
   }
+
+@font-face {
+  font-family: 'Noto Serif Local';
+  src: url('/NotoSerifJP-Bold.otf');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans Local';
+  src: url('/NotoSansJP-SemiBold.ttf');
+  font-display: swap;
+}
+
+svg.in-background {
+  position: fixed;
+  top: -10000px;
+}

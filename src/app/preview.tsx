@@ -1,13 +1,27 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { type z } from "zod";
 
 import { Direction, Preset, type FormSchema } from "./form-schema";
 import { horizontalLayout, verticalLayout } from "./glyph-layout";
+import { Skeleton } from "~/components/ui/skeleton";
 
 export const Preview = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const getReady = async () => {
+      await Promise.all([
+        document.fonts.load('1em "Noto Serif Local"'),
+        document.fonts.load('1em "Noto Sans Local"'),
+      ]);
+      setIsLoading(false);
+    };
+    void getReady();
+  }, []);
+
   const { watch } = useFormContext<z.infer<typeof FormSchema>>();
 
   const [to, a, ru] = watch("toaru");
@@ -36,15 +50,61 @@ export const Preview = () => {
 
   const layout = isHorizontal ? horizontalLayout : verticalLayout;
 
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // useEffect(() => {
+  //   if (isLoading) {
+  //     return
+  //   }
+
+  //   const draw = debounce(async () => {
+  //     const content = svgRef.current?.outerHTML;
+  //     console.log(content);
+  //     const session = new Session(content, {
+  //       fonts: {
+  //         "Noto Serif Local": { source: "/NotoSerifJP-Bold.otf" },
+  //         "Noto Sans Local": { source: "/NotoSansJP-SemiBold.ttf" },
+  //       },
+  //     });
+  //     const stat = await session.replaceAll();
+  //     const out: string = session.getSvgString();
+  //     const result = new DOMParser()
+  //       .parseFromString(out, "image/svg+xml")
+  //       .querySelector("svg");
+  //     if (result) {
+  //       result.id = "result-svg";
+  //       result.classList.remove("in-background");
+  //       const old = containerRef.current?.querySelector("#result-svg");
+  //       if (old) {
+  //         containerRef.current?.removeChild(old);
+  //       }
+  //       containerRef.current?.appendChild(result);
+  //     }
+  //   }, 200);
+  //   const observer = new MutationObserver(() => void draw())
+  //   observer.observe(svgRef.current as Node, { attributes: true, childList: true, subtree: true })
+  //   svgRef.current?.classList.add("in-background");
+  //   return () => observer.disconnect()
+  // }, [isLoading]);
+
+  if (isLoading) {
+    return <Skeleton className="h-[300px] w-[640px]" />;
+  }
+
   return (
-    <div>
+    <div ref={containerRef}>
       <svg
         width={scale * (isHorizontal ? 640 : 300)}
         height={scale * (isHorizontal ? 300 : 640)}
         viewBox={isHorizontal ? "0 0 640 300" : "0 0 300 640"}
         id="toaru_svg"
+        ref={svgRef}
+        xmlns="http://www.w3.org/2000/svg"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
+        key={String(isLoading)}
       >
-        <style id="svg_style"></style>
         <defs>
           <linearGradient
             id="fill_gradient"
@@ -68,7 +128,7 @@ export const Preview = () => {
           />
           <text
             fill="url(#fill_gradient)"
-            style={{ fontFamily: "ＭＳ 明朝", fontWeight: "bold" }}
+            style={{ fontFamily: "Noto Serif Local" }}
           >
             <tspan {...layout.text_to} id="text_to">
               {to}
@@ -102,13 +162,16 @@ export const Preview = () => {
             </tspan>
           </text>
           <text
+            x={0}
+            y={0}
             id="text_nato"
             fill="url(#fill_gradient)"
-            style={
-              isHorizontal
-                ? { fontFamily: "ＭＳ ゴシック" }
-                : { fontFamily: "ＭＳ ゴシック", transform: "rotate(90deg)", transformOrigin: "15px 310px" }
-            }
+            style={{
+              fontFamily: "Noto Sans Local",
+              transform: isHorizontal ? undefined : "rotate(90deg)",
+              transformOrigin: isHorizontal ? undefined : "15px 310px",
+              letterSpacing: "0.5em",
+            }}
           >
             <tspan
               // eslint-disable-next-line @typescript-eslint/no-unsafe-call

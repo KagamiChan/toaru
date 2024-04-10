@@ -9,8 +9,9 @@ const inter = Inter({
 
 export const metadata = {
   title: "とある画像の生成コード | Toaru Image Generator",
-  description: "とあるスタイルの画像生成ツール | Toaru style image generation tool",
-  icons: [{ rel: "icon", url: "/favicon.png" }],
+  description:
+    "とあるスタイルの画像生成ツール | Toaru style image generation tool",
+  icons: [{ rel: "icon", url: "/favicon.svg" }, { rel: "icon", url: "/favicon.png" }],
 };
 
 export default function RootLayout({
