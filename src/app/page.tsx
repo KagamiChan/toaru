@@ -3,7 +3,7 @@ import { Generator } from "./generator";
 
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
+    <main className="flex min-h-screen flex-col items-center">
       <Card>
         <CardHeader>
           <CardTitle>Parameters</CardTitle>
