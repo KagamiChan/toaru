@@ -12,6 +12,7 @@ import {
 import { useFormContext } from "react-hook-form";
 import { type z } from "zod";
 import Session from "svg-text-to-path/entries/browser-fontkit";
+import { useTranslation } from "react-i18next";
 
 import { Direction, Format, Preset, type FormSchema } from "./form-schema";
 import { horizontalLayout, verticalLayout } from "./glyph-layout";
@@ -27,6 +28,7 @@ export interface PreviewHandle {
 
 export const Preview = forwardRef<PreviewHandle>((props, ref) => {
   const [isLoading, setIsLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const getReady = async () => {
@@ -146,7 +148,7 @@ export const Preview = forwardRef<PreviewHandle>((props, ref) => {
   if (isLoading) {
     return (
       <Skeleton className="flex h-[300px] w-[640px] items-center justify-center">
-        Connecting to Misaka network
+        {t('Connecting to Misaka network')}
       </Skeleton>
     );
   }
