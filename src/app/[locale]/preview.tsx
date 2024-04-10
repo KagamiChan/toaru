@@ -124,7 +124,7 @@ export const Preview = forwardRef<PreviewHandle>((props, ref) => {
           } else {
             const a = document.createElement("a");
             a.href = url;
-            a.download = `toaru-${Date.now()}.png`;
+            a.download = `${new URL(location.href).hostname}-${Date.now()}.png`;
             a.click();
           }
           URL.revokeObjectURL(url);
