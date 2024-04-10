@@ -1,7 +1,12 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useAutoAnimate } from '@formkit/auto-animate/react'
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { DownloadIcon, OpenInNewWindowIcon } from "@radix-ui/react-icons";
+import { type z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import {
   Form,
@@ -10,32 +15,23 @@ import {
   FormItem,
   FormLabel,
 } from "~/components/ui/form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { DownloadIcon, OpenInNewWindowIcon } from "@radix-ui/react-icons";
-
-enum Color {
-  Kagaku = "kagaku",
-  Majutsu = "majutsu",
-  Custom = "custom",
-}
-
-enum Direction {
-  Horizontal = "horizontal",
-  Vertical = "vertical",
-}
-
-enum Format {
-  PNG = "png",
-  SVG = "svg",
-}
+import { Preset, Direction, Format, FormSchema } from "./form-schema";
+import { Preview } from "./preview";
+import { Slider } from "~/components/ui/slider";
+import {
+  Tooltip,
+  TooltipProvider,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
+import { Badge } from "~/components/ui/badge";
 
 const colorLabel = {
-  [Color.Kagaku]: "Kagaku",
-  [Color.Majutsu]: "Majutsu",
-  [Color.Custom]: "Custom",
+  [Preset.Kagaku]: "Kagaku",
+  [Preset.Majutsu]: "Majutsu",
+  [Preset.Custom]: "Custom",
 };
 
 const directionLabel = {
@@ -51,206 +47,207 @@ const stringDefaults = {
   nato: "レールガン",
 };
 
-const sizeLabel = {
-  width: "Width",
-  height: "Height",
-};
-
 const formatLabel = {
   [Format.PNG]: "PNG",
   [Format.SVG]: "SVG",
 };
 
-const FormSchema = z.object({
-  color: z.nativeEnum(Color),
-  direction: z.nativeEnum(Direction),
-  format: z.nativeEnum(Format),
-  toaru: z.string(),
-  kagaku: z.string(),
-  no: z.string(),
-  railgun: z.string(),
-  nato: z.string(),
-  width: z.number(),
-  height: z.number(),
-  startColor: z.string(),
-  endColor: z.string(),
-});
-
 export const Generator = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      color: Color.Kagaku,
+      preset: Preset.Kagaku,
       direction: Direction.Horizontal,
       format: Format.PNG,
-      width: 640,
-      height: 300,
+      scale: 1,
       startColor: "#00428D",
-      endColor: "#EB7334",
+      stopColor: "#EB7334",
       ...stringDefaults,
     },
   });
 
-  const [parent] = useAutoAnimate()
+  const [parent] = useAutoAnimate();
 
   return (
     <Form {...form}>
-      <form className="flex flex-col space-y-4" ref={parent}>
-        <FormItem>
-          <FormLabel>Text</FormLabel>
-          {["toaru", "kagaku", "no", "railgun", "nato"].map((name) => (
-            <FormField
-              key={name}
-              control={form.control}
-              name={name as "toaru" | "kagaku" | "no" | "railgun" | "nato"}
-              render={({ field }) => (
-                <>
-                  <FormControl>
-                    <Input {...field} list={name} />
-                  </FormControl>
-                  <datalist id={name}>
-                    <option
-                      value={
-                        stringDefaults[
-                          name as "toaru" | "kagaku" | "no" | "railgun" | "nato"
-                        ]
-                      }
-                    />
-                  </datalist>
-                </>
-              )}
-            />
-          ))}
-        </FormItem>
-        <FormField
-          control={form.control}
-          name="color"
-          render={({ field }) => (
+      <Preview />
+      <Card className="sticky bottom-0">
+        <CardHeader>
+          <CardTitle>Parameters</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form className="flex flex-col space-y-4" ref={parent}>
             <FormItem>
-              <FormLabel>Color</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex space-x-2"
-                >
-                  {Object.values(Color).map((color) => (
-                    <FormItem
-                      key={color}
-                      className="flex items-center space-x-1 space-y-0"
-                    >
-                      <FormControl>
-                        <RadioGroupItem value={color}></RadioGroupItem>
-                      </FormControl>
-                      <FormLabel>{colorLabel[color]}</FormLabel>
-                    </FormItem>
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        {
-          form.watch("color") === Color.Custom &&
-          <FormItem>
-            <FormLabel>Custom gradient</FormLabel>
-            <div className="flex space-x-4 space-y-0">
-              {["startColor", "endColor"].map((name) => (
-                <FormItem key={name} className="w-16">
+              <FormLabel>Text</FormLabel>
+              <div className="flex space-x-4">
+                {["toaru", "kagaku", "no", "railgun", "nato"].map((name) => (
                   <FormField
+                    key={name}
                     control={form.control}
-                    name={name as "startColor" | "endColor"}
+                    name={
+                      name as "toaru" | "kagaku" | "no" | "railgun" | "nato"
+                    }
                     render={({ field }) => (
-                      <FormControl>
-                        <Input {...field} type="color" />
-                      </FormControl>
+                      <>
+                        <FormControl>
+                          <Input {...field} list={name} />
+                        </FormControl>
+                        <datalist id={name}>
+                          <option
+                            value={
+                              stringDefaults[
+                                name as
+                                  | "toaru"
+                                  | "kagaku"
+                                  | "no"
+                                  | "railgun"
+                                  | "nato"
+                              ]
+                            }
+                          />
+                        </datalist>
+                      </>
                     )}
                   />
-                </FormItem>
-              ))}
-            </div>
-          </FormItem>
-        }
-        <FormField
-          control={form.control}
-          name="direction"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Direction</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex space-x-2"
-                >
-                  {Object.values(Direction).map((direction) => (
-                    <FormItem
-                      key={direction}
-                      className="flex items-center space-x-1 space-y-0"
-                    >
-                      <FormControl>
-                        <RadioGroupItem value={direction}></RadioGroupItem>
-                      </FormControl>
-                      <FormLabel>{directionLabel[direction]}</FormLabel>
-                    </FormItem>
-                  ))}
-                </RadioGroup>
-              </FormControl>
+                ))}
+              </div>
             </FormItem>
-          )}
-        />
-
-        <FormItem className="flex space-x-4 space-y-0">
-          {["width", "height"].map((name) => (
-            <FormItem key={name}>
-              <FormLabel>{sizeLabel[name as "width" | "height"]}</FormLabel>
-              <FormField
-                control={form.control}
-                name={name as "width" | "height"}
-                render={({ field }) => (
+            <FormField
+              control={form.control}
+              name="preset"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Color</FormLabel>
                   <FormControl>
-                    <Input {...field} type="number" />
-                  </FormControl>
-                )}
-              />
-            </FormItem>
-          ))}
-        </FormItem>
-        <FormField
-          control={form.control}
-          name="format"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Format</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex space-x-2"
-                >
-                  {Object.values(Format).map((format) => (
-                    <FormItem
-                      key={format}
-                      className="flex items-center space-x-1 space-y-0"
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex space-x-2"
                     >
-                      <FormControl>
-                        <RadioGroupItem value={format}></RadioGroupItem>
-                      </FormControl>
-                      <FormLabel>{formatLabel[format]}</FormLabel>
+                      {Object.values(Preset).map((preset) => (
+                        <FormItem
+                          key={preset}
+                          className="flex items-center space-x-1 space-y-0"
+                        >
+                          <FormControl>
+                            <RadioGroupItem value={preset}></RadioGroupItem>
+                          </FormControl>
+                          <FormLabel>{colorLabel[preset]}</FormLabel>
+                        </FormItem>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            {form.watch("preset") === Preset.Custom && (
+              <FormItem>
+                <FormLabel>Custom gradient</FormLabel>
+                <div className="flex space-x-4 space-y-0">
+                  {["startColor", "stopColor"].map((name) => (
+                    <FormItem key={name} className="w-16">
+                      <FormField
+                        control={form.control}
+                        name={name as "startColor" | "stopColor"}
+                        render={({ field }) => (
+                          <FormControl>
+                            <Input {...field} type="color" />
+                          </FormControl>
+                        )}
+                      />
                     </FormItem>
                   ))}
-                </RadioGroup>
-              </FormControl>
+                </div>
+              </FormItem>
+            )}
+            <FormField
+              control={form.control}
+              name="direction"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Direction</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex space-x-2"
+                    >
+                      {Object.values(Direction).map((direction) => (
+                        <FormItem
+                          key={direction}
+                          className="flex items-center space-x-1 space-y-0"
+                        >
+                          <FormControl>
+                            <RadioGroupItem value={direction}></RadioGroupItem>
+                          </FormControl>
+                          <FormLabel>{directionLabel[direction]}</FormLabel>
+                        </FormItem>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormItem>
+              <FormLabel>Scale</FormLabel>
+
+              <div className="flex space-x-4">
+                <Badge variant="secondary">{form.watch("scale")}</Badge>
+                <FormField
+                  control={form.control}
+                  name={"scale"}
+                  render={({ field }) => (
+                    <FormControl>
+                      <Slider
+                        defaultValue={[field.value]}
+                        onValueChange={([v]) => field.onChange(v)}
+                        min={0.1}
+                        max={4}
+                        step={0.1}
+                      />
+                    </FormControl>
+                  )}
+                />
+              </div>
             </FormItem>
-          )}
-        />
-        <Button>
-          Download <DownloadIcon />
-        </Button>
-        <Button variant="secondary">
-          Open in new tab <OpenInNewWindowIcon />
-        </Button>
-      </form>
+            <FormField
+              control={form.control}
+              name="format"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Format</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex space-x-2"
+                    >
+                      {Object.values(Format).map((format) => (
+                        <FormItem
+                          key={format}
+                          className="flex items-center space-x-1 space-y-0"
+                        >
+                          <FormControl>
+                            <RadioGroupItem value={format}></RadioGroupItem>
+                          </FormControl>
+                          <FormLabel>{formatLabel[format]}</FormLabel>
+                        </FormItem>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <Button>
+              Download <DownloadIcon />
+            </Button>
+            <Button variant="secondary">
+              Open in new tab <OpenInNewWindowIcon />
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </Form>
   );
 };
