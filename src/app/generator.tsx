@@ -1,13 +1,14 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { DownloadIcon, OpenInNewWindowIcon } from "@radix-ui/react-icons";
-import { type z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DownloadIcon, OpenInNewWindowIcon } from "@radix-ui/react-icons";
+import { useForm } from "react-hook-form";
+import { type z } from "zod";
 
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import {
   Form,
   FormControl,
@@ -16,17 +17,10 @@ import {
   FormLabel,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { Button } from "~/components/ui/button";
-import { Preset, Direction, Format, FormSchema } from "./form-schema";
-import { Preview } from "./preview";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Slider } from "~/components/ui/slider";
-import {
-  Tooltip,
-  TooltipProvider,
-  TooltipContent,
-  TooltipTrigger,
-} from "~/components/ui/tooltip";
-import { Badge } from "~/components/ui/badge";
+import { Direction, FormSchema, Format, Preset } from "./form-schema";
+import { Preview } from "./preview";
 
 const colorLabel = {
   [Preset.Kagaku]: "Kagaku",

@@ -1,11 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { type z } from "zod";
-import { useMemo } from "react";
 
 import { Direction, Preset, type FormSchema } from "./form-schema";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { horizontalLayout, verticalLayout } from "./glyph-layout";
 
 export const Preview = () => {
   const { watch } = useFormContext<z.infer<typeof FormSchema>>();
@@ -19,6 +19,8 @@ export const Preview = () => {
   const preset = watch("preset");
   const direction = watch("direction");
   const scale = watch("scale");
+  const customStartColor = watch("startColor");
+  const customStopColor = watch("stopColor");
 
   const [startColor, stopColor] = useMemo(() => {
     if (preset === Preset.Kagaku) {
@@ -27,15 +29,15 @@ export const Preview = () => {
     if (preset === Preset.Majutsu) {
       return ["#49B8E3", "#00428D"];
     }
-    return [watch("startColor"), watch("stopColor")];
-  }, [preset, watch]);
+    return [customStartColor, customStopColor];
+  }, [customStartColor, customStopColor, preset]);
 
   const isHorizontal = direction === Direction.Horizontal;
 
-  const [ref] = useAutoAnimate();
+  const layout = isHorizontal ? horizontalLayout : verticalLayout;
 
   return (
-    <div ref={ref}>
+    <div>
       <svg
         width={scale * (isHorizontal ? 640 : 300)}
         height={scale * (isHorizontal ? 300 : 640)}
@@ -52,105 +54,65 @@ export const Preview = () => {
             y2="100%"
             gradientUnits="userSpaceOnUse"
           >
-            <stop id="startLG" stop-color={startColor} offset="0%" />
-            <stop id="stopLG" stop-color={stopColor} offset="100%" />
+            <stop id="startLG" stopColor={startColor} offset="0%" />
+            <stop id="stopLG" stopColor={stopColor} offset="100%" />
           </linearGradient>
         </defs>
         <g id="toaru_g">
           <rect
             x={isHorizontal ? 70 : 15}
             y={isHorizontal ? 150 : 142}
-            width={isHorizontal ? 140 : 152}
+            width={isHorizontal ? 140 : 150}
             height={isHorizontal ? 140 : 150}
             fill="url(#fill_gradient)"
           />
-          <text fill="url(#fill_gradient)">
-            <tspan
-              x={0}
-              y={120}
-              style={{ font: "bold 140px 'ＭＳ 明朝','MMO'" }}
-              id="txt_to"
-            >
+          <text
+            fill="url(#fill_gradient)"
+            style={{ fontFamily: "ＭＳ 明朝", fontWeight: "bold" }}
+          >
+            <tspan {...layout.text_to} id="text_to">
               {to}
             </tspan>
-            <tspan
-              x={110}
-              y={120}
-              style={{ font: "bold 80px 'ＭＳ 明朝','MMO'" }}
-              id="txt_a"
-            >
+            <tspan {...layout.text_a} id="text_a">
               {a}
             </tspan>
-            <tspan
-              x={160}
-              y={90}
-              style={{ font: "bold 70px 'ＭＳ 明朝','MMO'" }}
-              id="txt_ru"
-            >
+            <tspan {...layout.text_ru} id="text_ru">
               {ru}
             </tspan>
-            <tspan
-              x={210}
-              y={120}
-              style={{ font: "bold 130px 'ＭＳ 明朝','MMO'" }}
-              id="txt_ka"
-            >
+            <tspan {...layout.text_ka} id="text_ka">
               {ka}
             </tspan>
-            <tspan
-              x={340}
-              y={110}
-              style={{ font: "bold 100px 'ＭＳ 明朝','MMO'" }}
-              id="txt_gaku"
-            >
+            <tspan {...layout.text_gaku} id="text_gaku">
               {gaku}
             </tspan>
-            <tspan
-              x={430}
-              y={120}
-              style={{ font: "bold 120px 'ＭＳ 明朝','MMO'" }}
-              id="txt_no"
-            >
+            <tspan {...layout.text_no} id="text_no">
               {no}
             </tspan>
-            <tspan
-              x={70}
-              y={270}
-              style={{ font: "bold 140px 'ＭＳ 明朝','MMO'" }}
-              id="txt_rg0"
-              fill="#fff"
-            >
+            <tspan {...layout.text_rg0} id="text_rg0" fill="#fff">
               {rg0}
             </tspan>
-            <tspan
-              x={205}
-              y={250}
-              style={{ font: "bold 100px 'ＭＳ 明朝','MMO'" }}
-              id="txt_rg1"
-            >
+            <tspan {...layout.text_rg1} id="text_rg1">
               {rg1}
             </tspan>
-            <tspan
-              x={290}
-              y={250}
-              style={{ font: "bold 130px 'ＭＳ 明朝','MMO'" }}
-              id="txt_rg2"
-            >
+            <tspan {...layout.text_rg2} id="text_rg2">
               {rg2}
             </tspan>
-            <tspan
-              x={400}
-              y={280}
-              style={{ font: "bold 160px 'ＭＳ 明朝','MMO'" }}
-              id="txt_rg3"
-            >
+            <tspan {...layout.text_rg3} id="text_rg3">
               {rg3}
             </tspan>
+          </text>
+          <text
+            id="text_nato"
+            fill="url(#fill_gradient)"
+            style={
+              isHorizontal
+                ? { fontFamily: "ＭＳ ゴシック" }
+                : { fontFamily: "ＭＳ ゴシック", transform: "rotate(90deg)", transformOrigin: "15px 310px" }
+            }
+          >
             <tspan
-              x={220}
-              y={290}
-              style={{ font: "bold 30px 'MS Gothic','MGO'" }}
-              id="txt_nato"
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+              {...layout.text_nato}
             >
               {nato}
             </tspan>
