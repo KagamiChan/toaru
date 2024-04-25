@@ -61,7 +61,7 @@ importers:
         version: 14.2.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next-i18n-router:
         specifier: ^5.4.0
-        version: 5.4.0
+        version: 5.4.2
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1756,8 +1756,8 @@ packages:
     resolution: {integrity: sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==}
     engines: {node: '>= 0.6'}
 
-  next-i18n-router@5.4.0:
-    resolution: {integrity: sha512-B8RPDNw74YpHIjsKI+8rc6JKXSAibmRlzeJ77NcYuUCs+geLWvaLMXRc2DasEwB5b/NyF2IC3aVz1RCA6nrj4w==}
+  next-i18n-router@5.4.2:
+    resolution: {integrity: sha512-ixLQaA4TlQ7e107vZa0pxC3mxVxQ6wDq79V6DFj8L1S/yk8+RSnHDXKeEVgsXjkruZ4nINIkV8kgabHNXRFpBQ==}
 
   next@14.2.2:
     resolution: {integrity: sha512-oGwUaa2bCs47FbuxWMpOoXtBMPYpvTPgdZr3UAo+pu7Ns00z9otmYpoeV1HEiYL06AlRQQIA/ypK526KjJfaxg==}
@@ -4370,7 +4370,7 @@ snapshots:
 
   negotiator@0.6.3: {}
 
-  next-i18n-router@5.4.0:
+  next-i18n-router@5.4.2:
     dependencies:
       '@formatjs/intl-localematcher': 0.5.4
       negotiator: 0.6.3
