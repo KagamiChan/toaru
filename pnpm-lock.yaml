@@ -49,7 +49,7 @@ importers:
         version: 2.1.1
       i18next:
         specifier: ^23.11.2
-        version: 23.16.0
+        version: 23.16.1
       i18next-resources-to-backend:
         specifier: ^1.2.1
         version: 1.2.1
@@ -73,7 +73,7 @@ importers:
         version: 7.53.1(react@18.3.1)
       react-i18next:
         specifier: ^15.0.0
-        version: 15.0.3(i18next@23.16.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 15.0.3(i18next@23.16.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       svg-text-to-path:
         specifier: ^2.0.3
         version: 2.0.3
@@ -1425,8 +1425,8 @@ packages:
   i18next-resources-to-backend@1.2.1:
     resolution: {integrity: sha512-okHbVA+HZ7n1/76MsfhPqDou0fptl2dAlhRDu2ideXloRRduzHsqDOznJBef+R3DFZnbvWoBW+KxJ7fnFjd6Yw==}
 
-  i18next@23.16.0:
-    resolution: {integrity: sha512-Ni3CG6c14teOogY19YNRl+kYaE/Rb59khy0VyHVn4uOZ97E2E/Yziyi6r3C3s9+wacjdLZiq/LLYyx+Cgd+FCw==}
+  i18next@23.16.1:
+    resolution: {integrity: sha512-H73h/H7BN7PI38Sq9XsOXzWFBH6mtyCYFiUMVtd9BxiYNDWPPIzKcBmDrqhjKbw3IXP5j6JoSW4ugJlaZuOvKw==}
 
   iconv-lite@0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
@@ -3966,7 +3966,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.24.4
 
-  i18next@23.16.0:
+  i18next@23.16.1:
     dependencies:
       '@babel/runtime': 7.25.7
 
@@ -4484,11 +4484,11 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  react-i18next@15.0.3(i18next@23.16.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-i18next@15.0.3(i18next@23.16.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.25.7
       html-parse-stringify: 3.0.1
-      i18next: 23.16.0
+      i18next: 23.16.1
       react: 18.3.1
     optionalDependencies:
       react-dom: 18.3.1(react@18.3.1)
