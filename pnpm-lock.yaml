@@ -95,7 +95,7 @@ importers:
         version: 4.17.20
       '@types/node':
         specifier: ^22.4.1
-        version: 22.16.1
+        version: 22.16.2
       '@types/react':
         specifier: ^19.0.0
         version: 19.1.8
@@ -732,8 +732,8 @@ packages:
   '@types/lodash@4.17.20':
     resolution: {integrity: sha512-H3MHACvFUEiujabxhaI/ImO6gUrd8oOurg7LQtS7mbwIXA/cUqWrvBsaeJ23aZEPk1TAYkurjfMbSELfoCXlGA==}
 
-  '@types/node@22.16.1':
-    resolution: {integrity: sha512-oaNE4MzsA6uO7HcsjUvqzz19lYIRsV6I1Dc6iOvgwYYDiOeF7/9b2E/PE0UW2ccwpgWPVUedjltYXQXVKFd4EA==}
+  '@types/node@22.16.2':
+    resolution: {integrity: sha512-Cdqa/eJTvt4fC4wmq1Mcc0CPUjp/Qy2FGqLza3z3pKymsI969TcZ54diNJv8UYUgeWxyb8FSbCkhdR6WqmUFhA==}
 
   '@types/react-dom@19.1.6':
     resolution: {integrity: sha512-4hOiT/dwO8Ko0gV1m/TJZYk3y0KBnY9vzDh7W+DH17b2HFSOGgdj33dhihPeuy3l0q23+4e+hoXHV6hCC4dCXw==}
@@ -3259,7 +3259,7 @@ snapshots:
 
   '@types/lodash@4.17.20': {}
 
-  '@types/node@22.16.1':
+  '@types/node@22.16.2':
     dependencies:
       undici-types: 6.21.0
 
