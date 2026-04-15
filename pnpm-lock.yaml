@@ -61,7 +61,7 @@ importers:
         version: 14.2.33(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       next-i18n-router:
         specifier: ^5.4.0
-        version: 5.5.6(next@14.2.33(react-dom@19.1.1(react@19.1.1))(react@19.1.1))
+        version: 5.5.7(next@14.2.33(react-dom@19.1.1(react@19.1.1))(react@19.1.1))
       react:
         specifier: 19.1.1
         version: 19.1.1
@@ -1899,8 +1899,8 @@ packages:
     resolution: {integrity: sha512-8Ofs/AUQh8MaEcrlq5xOX0CQ9ypTF5dl78mjlMNfOK08fzpgTHQRQPBxcPlEtIw0yRpws+Zo/3r+5WRby7u3Gg==}
     engines: {node: '>= 0.6'}
 
-  next-i18n-router@5.5.6:
-    resolution: {integrity: sha512-6AUAdhTf4hAt4X8k7HnOaVGQka6Nhim+NPu9Ne5jOgibAA7p2vPQTQi7rrvU9Uounb/Z0oc5Lrv0VPmDAtHSnw==}
+  next-i18n-router@5.5.7:
+    resolution: {integrity: sha512-LG/mqNJhvCpxH+sZjvzqoDnwsGUOcF425q38TNsk0zNRPQ2qabYRL5AhtEDELr6I2WRwIKaB421tgo2DYJS2YA==}
     peerDependencies:
       next: ^13 || ^14 || ^15 || ^16
 
@@ -4622,7 +4622,7 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  next-i18n-router@5.5.6(next@14.2.33(react-dom@19.1.1(react@19.1.1))(react@19.1.1)):
+  next-i18n-router@5.5.7(next@14.2.33(react-dom@19.1.1(react@19.1.1))(react@19.1.1)):
     dependencies:
       '@formatjs/intl-localematcher': 0.6.2
       negotiator: 1.0.0
