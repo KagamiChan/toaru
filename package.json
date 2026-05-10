@@ -33,7 +33,7 @@
     "react-hook-form": "^7.51.3",
     "react-i18next": "^15.0.0",
     "svg-text-to-path": "^2.0.3",
-    "tailwind-merge": "^2.2.2",
+    "tailwind-merge": "^3.0.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"
   },
